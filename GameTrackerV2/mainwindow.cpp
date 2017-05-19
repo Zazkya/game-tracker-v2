@@ -35,3 +35,10 @@ void MainWindow::on_pushButton_4_clicked()
     ui->verticalLayout_2->addWidget(ui->stackedWidget_2);
     ui->verticalLayout_2->update();
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+
+
+
+}

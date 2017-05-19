@@ -53,7 +53,7 @@ bool dbmanager::createTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateReleased TEXT NOT NULL, dateModified TEXT NOT NULL, eTime INTEGER NOT NULL, genre TEXT NOT NULL, notes CLOB NOT NULL, metadata INTEGER NOT NULL, rating INTEGER NOT NULL, synopsis CLOB NOT NULL);");
+    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB NOT NULL, rating INTEGER, synopsis CLOB NOT NULL, developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT);");
 
     if(!query.exec()){
         success = false;
@@ -62,6 +62,31 @@ bool dbmanager::createTable(){
     return success;
 }
 
+bool dbmanager::createGenreTable(){
+    bool success = false;
+
+    QSqlQuery query;
+    query.prepare("CREATE TABLE IF NOT EXISTS genreTable(genreid INTEGER PRIMARY KEY, genre, UNIQUE(genre));");
+
+    if(!query.exec()){
+        success = false;
+    }else success = true;
+
+    return success;
+}
+
+bool dbmanager::createLinkerTable(){
+    bool success = false;
+
+    QSqlQuery query;
+    query.prepare("CREATE TABLE IF NOT EXISTS linkerTable(linkerid INTEGER PRIMARY KEY, data INTEGER);");
+
+    if(!query.exec()){
+        success = false;
+    }else success = true;
+
+    return success;
+}
 /**
  * @brief DbManager::addEntry
  * add entry to db
@@ -104,7 +129,7 @@ bool dbmanager::entryExists(QString &name){
  */
 QSqlQuery dbmanager::queryAll(){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, genre, status, dateAdded, dateModified, eTime, rating FROM gameTable");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable");
     query.exec();
     return query;
 }
@@ -117,7 +142,7 @@ QSqlQuery dbmanager::queryAll(){
  */
 QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, genre, status, dateAdded, dateModified FROM gameTable WHERE status = (:status) AND platform = (:platform)");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
     query.bindValue(":status", status);
     query.bindValue(":platform", platform);
     query.exec();
@@ -135,7 +160,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
  */
 QSqlQuery dbmanager::queryStatus(QString status){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, genre, dateAdded, dateModified FROM gameTable WHERE status = (:status) ");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) ");
     query.bindValue(":status", status);
     query.exec();
     return query;

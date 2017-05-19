@@ -161,7 +161,7 @@ void imageDownloader(QString url){
            QByteArray responseData = reply->readAll();
 
            QString myPath = QCoreApplication::applicationDirPath();
-           QString path = myPath + "/example.png";
+           QString path = myPath + "/example.jpg";
 
            QFile file(path);
            file.open(QIODevice::WriteOnly);
@@ -172,6 +172,14 @@ void imageDownloader(QString url){
 
 }
 
+void imageViewer(QString name){
+//    QString myPath = QCoreApplication::applicationDirPath();
+//    QString path = myPath + "/example.jpg";
+//    QPixmap pixmap(path);
+//    QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
+//    qDebug()<<newp.size();
+//    ui->label->setPixmap(newp);
+}
 
 
 
