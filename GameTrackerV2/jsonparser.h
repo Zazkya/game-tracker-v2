@@ -29,6 +29,9 @@ public:
     QString getDeck();
     QString getSynopsis();
     QString getImage();
+    QMap<QString, QString>getMap();
+    QList<QString>getGenre();
+    QList<QString>getPlatformList();
 
 private:
     QMap<QString, QString> map;
@@ -46,5 +49,6 @@ QString parseDeveloper(QJsonObject jsonObject);
 
 QMap<QString, QString> createMap(QJsonObject jsonObject);
 
-void imageDownloader(QString url);
+void imageDownloader(QString url, QString name);
+QString prettyString(QString string);
 #endif // JSONPARSER_H

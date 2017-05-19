@@ -132,31 +132,7 @@
         <widget class="QWidget" name="page_3">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_13">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_10">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
+           <widget class="QTableView" name="tableView"/>
           </item>
          </layout>
         </widget>

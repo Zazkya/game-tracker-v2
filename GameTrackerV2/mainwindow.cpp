@@ -2,7 +2,12 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include "jsonparser.h"
-
+#include "dbmanager.h"
+#include <QSqlQueryModel>
+#include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QString>
+#include <QObject>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,8 +15,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-
+//    dbmanager db;
+//    db.createTable();
+//    db.createGenreTable();
+//    db.createLinkerTable();
+//    jsonparser j("5");
+//    bool success = db.autoAddEntry(j.getMap(),j.getGenre(), j.getPlatformList());
+//    qDebug()<<success;
+//    QSqlQueryModel *model = new QSqlQueryModel();
+//    model->setQuery(db.queryAll());
+//    ui->tableView->setModel(model);
+//    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QItemSelectionModel *select = ui->tableView->selectionModel();
+//   // QObject::connect(select, SIGNAL(currentRowChanged(QModelIndex))), this, SLOT(on_tableView_clicked(QModelIndex));
+//    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 
 
 }
@@ -41,4 +58,27 @@ void MainWindow::on_pushButton_2_clicked()
 
 
 
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
+{
+
+
+
+}
+
+void MainWindow::on_tableView_clicked(const QModelIndex &index)
+{
+    const QAbstractItemModel *model = index.model();
+
+    QString name = model->data(model->index(index.row(), 0), 0).toString();
+    QString newName = prettyString(name);
+
+    QString myPath = QCoreApplication::applicationDirPath();
+    QString folderPath = myPath +"/"+ newName;
+    QString path =folderPath + "/" + newName + ".jpg";
+
+    QPixmap pixmap(path);
+    QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
+    ui->label->setPixmap(newp);
 }

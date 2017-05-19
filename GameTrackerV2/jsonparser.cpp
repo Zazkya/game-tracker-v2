@@ -13,6 +13,7 @@
 #include <QVariantMap>
 #include <QJsonArray>
 #include <QFile>
+#include <QDir>
 
 jsonparser::jsonparser(QString gameId){
     QByteArray jsonArray = getJson(gameId);
@@ -91,6 +92,21 @@ QString jsonparser::getImage()
     return map["image"];
 }
 
+QMap<QString, QString> jsonparser::getMap()
+{
+    return map;
+}
+
+QList<QString> jsonparser::getGenre()
+{
+    return genreList;
+}
+
+QList<QString> jsonparser::getPlatformList()
+{
+    return platformList;
+}
+
 QByteArray getJson(QString gameID){
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
@@ -145,7 +161,7 @@ QMap<QString, QString> createMap(QJsonObject jsonObject){
 
 }
 
-void imageDownloader(QString url){
+void imageDownloader(QString url, QString name){
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
     QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
@@ -160,10 +176,22 @@ void imageDownloader(QString url){
        {
            QByteArray responseData = reply->readAll();
 
+           QString newName = prettyString(name);
+
            QString myPath = QCoreApplication::applicationDirPath();
-           QString path = myPath + "/example.jpg";
+           QString folderPath = myPath +"/"+ newName;
+           QString path =folderPath + "/" + newName + ".jpg";
+
+           QDir dir(folderPath);
+
+           if(!QDir(folderPath).exists()){
+             qDebug()<< dir.mkpath(folderPath);
+               qDebug()<<folderPath;
+           }
+
 
            QFile file(path);
+           qDebug()<<path;
            file.open(QIODevice::WriteOnly);
            file.write((responseData));
            file.close();
@@ -183,3 +211,13 @@ void imageViewer(QString name){
 
 
 
+
+
+QString prettyString(QString string){
+
+
+    string.remove(QRegExp(QString::fromUtf8("[-`~!@#$%^&*()_—+=|:;<>«»,.?/{}\'\"\\\[\\\]\\\\]")));
+    string.remove(" ");
+    return string;
+
+}

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDate>
 #include <QCoreApplication>
+#include "jsonparser.h"
 
 
 /**
@@ -53,7 +54,7 @@ bool dbmanager::createTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB NOT NULL, rating INTEGER, synopsis CLOB NOT NULL, developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT);");
+    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB , rating INTEGER, synopsis CLOB , developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT);");
 
     if(!query.exec()){
         success = false;
@@ -93,9 +94,75 @@ bool dbmanager::createLinkerTable(){
  * @return
  * returns true if successfull
  */
-bool dbmanager::addEntry(){
+bool dbmanager::addEntry(QString name, QString platform, QString developer, QString publisher, QString series, QString deck, QString synopsis, QString image, QString status ){
     bool success = false;
     //TODO:Add method to add to db. Do after api config
+    QSqlQuery query;
+    query.prepare("INSERT INTO gameTable(id, name, platform,developer,publisher,series,deck,synopsis,image,dateModified,dateAdded,status) VALUES (:id, :name,:platform,:developer,:publisher,:series,:deck,:synopsis,:image,:dateModified,:dateAdded, :status)");
+//    qDebug()<<name;
+//    qDebug()<<platform;
+//    qDebug()<<developer;
+//    qDebug()<<publisher;
+//    qDebug()<<series;
+//    qDebug()<<deck;
+//    qDebug()<<synopsis;
+//    qDebug()<<image;
+//    qDebug()<<this->nowDate();
+//    qDebug()<<status;
+
+//   query.bindValue(":id", 1);
+//    query.bindValue(":name", name);
+//    query.bindValue(":platform", platform);
+//    query.bindValue(":developer", developer);
+//    query.bindValue(":publisher", publisher);
+//    query.bindValue(":series", series);
+//    query.bindValue(":deck", deck);
+//    query.bindValue(":synopsis", synopsis);
+//    query.bindValue(":image", image);
+//    query.bindValue(":dateModified", this->nowDate());
+//    query.bindValue(":dateAdded", this->nowDate());
+//    query.bindValue(":status", status);
+
+    //query.prepare("INSERT INTO gameTable(name, platform, status, dateAdded, dateModified, synopsis, deck, developer, publisher, series, image) VALUES(:name, :platform, :status, :dateAdded, :dateModified, :synopsis, :deck, :developer, :publisher, :series, :image)");
+    query.bindValue(":name", name);
+    query.bindValue(":platform", platform);
+    query.bindValue(":status", status);
+    query.bindValue(":dateAdded", this->nowDate());
+    query.bindValue(":dateModified", this->nowDate());
+    query.bindValue(":synopsis", synopsis);
+    query.bindValue(":deck", deck);
+    query.bindValue(":developer", developer);
+    query.bindValue(":publisher", publisher);
+    query.bindValue(":series", series);
+    query.bindValue(":image", image);
+
+
+    if(!query.exec()){
+        success = false;
+    }else success = true;
+    imageDownloader(image, name);
+    return success;
+}
+
+bool dbmanager::addGenre(QList<QString> list){
+    bool success = false;
+
+    for(int i =0; i < list.size(); i++ ){
+        QSqlQuery query;
+        query.prepare("INSERT OR IGNORE INTO genreTable(genre) VALUES(:genre);");
+        query.bindValue(":genre", list[i]);
+        if(!query.exec()){
+            success = false;
+        }else success = true;
+    }
+
+
+
+}
+
+bool dbmanager::autoAddEntry(QMap<QString, QString> map, QList<QString> genreList, QList<QString> platformList){
+    bool success = false;
+    success = addEntry(map["name"], platformList[0], map["developer"], map["publisher"], map["franchise"], map["deck"],map["description"], map["image"], "Unfinished" );
 
     return success;
 }
@@ -106,7 +173,7 @@ bool dbmanager::addEntry(){
  * @param name
  * name of entry
  * @return
- * return tru if exists
+ * return true if exists
  */
 bool dbmanager::entryExists(QString &name){
     bool exists = false;
@@ -129,7 +196,7 @@ bool dbmanager::entryExists(QString &name){
  */
 QSqlQuery dbmanager::queryAll(){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable");
     query.exec();
     return query;
 }
