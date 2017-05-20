@@ -26,10 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     dbmanager.cpp \
-    jsonparser.cpp
+    jsonparser.cpp \
+    dialog.cpp
 
 HEADERS  += mainwindow.h \
     dbmanager.h \
-    jsonparser.h
+    jsonparser.h \
+    dialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui

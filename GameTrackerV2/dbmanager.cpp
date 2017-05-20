@@ -140,7 +140,7 @@ bool dbmanager::addEntry(QString name, QString platform, QString developer, QStr
     if(!query.exec()){
         success = false;
     }else success = true;
-    imageDownloader(image, name);
+
     return success;
 }
 
@@ -160,9 +160,9 @@ bool dbmanager::addGenre(QList<QString> list){
 
 }
 
-bool dbmanager::autoAddEntry(QMap<QString, QString> map, QList<QString> genreList, QList<QString> platformList){
+bool dbmanager::autoAddEntry(QMap<QString, QString> map, QList<QString> genreList){
     bool success = false;
-    success = addEntry(map["name"], platformList[0], map["developer"], map["publisher"], map["franchise"], map["deck"],map["description"], map["image"], "Unfinished" );
+    success = addEntry(map["name"], map["platform"], map["developer"], map["publisher"], map["franchise"], map["deck"],map["description"], map["image"], "Unfinished" );
 
     return success;
 }

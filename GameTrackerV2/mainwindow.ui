@@ -33,28 +33,28 @@
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>PushButton</string>
+         <string>All</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_4">
         <property name="text">
-         <string>PushButton</string>
+         <string>Finished</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_3">
         <property name="text">
-         <string>PushButton</string>
+         <string>Unfinished</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_2">
         <property name="text">
-         <string>PushButton</string>
+         <string>Retired</string>
         </property>
        </widget>
       </item>
@@ -74,7 +74,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -85,35 +85,35 @@
       <item>
        <widget class="QPushButton" name="pushButton_8">
         <property name="text">
-         <string>PushButton</string>
+         <string>Add</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_7">
         <property name="text">
-         <string>PushButton</string>
+         <string>Edit</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_9">
         <property name="text">
-         <string>PushButton</string>
+         <string>View</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_6">
         <property name="text">
-         <string>PushButton</string>
+         <string>Stats</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_5">
         <property name="text">
-         <string>PushButton</string>
+         <string>Sort</string>
         </property>
        </widget>
       </item>
@@ -142,19 +142,6 @@
       <item>
        <widget class="QStackedWidget" name="stackedWidget_2">
         <widget class="QWidget" name="page_11">
-         <widget class="QPushButton" name="pushButton_12">
-          <property name="geometry">
-           <rect>
-            <x>40</x>
-            <y>40</y>
-            <width>141</width>
-            <height>71</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
          <widget class="QLabel" name="label_2">
           <property name="geometry">
            <rect>

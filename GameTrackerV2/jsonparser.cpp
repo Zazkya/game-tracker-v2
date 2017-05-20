@@ -14,8 +14,16 @@
 #include <QJsonArray>
 #include <QFile>
 #include <QDir>
+#include <QPixmap>
 
-jsonparser::jsonparser(QString gameId){
+jsonparser::jsonparser(){
+
+
+
+}
+
+void jsonparser::initParser(QString gameId)
+{
     QByteArray jsonArray = getJson(gameId);
     QJsonDocument doc(QJsonDocument::fromJson(jsonArray));
     QJsonObject json = doc.object();
@@ -41,8 +49,6 @@ jsonparser::jsonparser(QString gameId){
         QJsonObject tempPlatformObject = tempPlatformValue.toObject();
         platformList.append(tempPlatformObject["name"].toString());
     }
-
-
 }
 
 
@@ -107,11 +113,17 @@ QList<QString> jsonparser::getPlatformList()
     return platformList;
 }
 
+void jsonparser::setPlatform(QString platform)
+{
+    map["platform"] = platform;
+    qDebug()<<map["platform"];
+}
+
 QByteArray getJson(QString gameID){
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
     QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
-    QNetworkRequest req( QUrl( QString("https://www.giantbomb.com/api/game/3030-4725/?api_key=2eb2277e5d566e4046904bde421a1c9223e09105&field_list=name,deck,developers,themes,franchises,genres,image,platforms,publishers,description%2Cname&format=json") ) );
+    QNetworkRequest req( QUrl( QString("https://www.giantbomb.com/api/game/" +gameID+ "/?api_key=2eb2277e5d566e4046904bde421a1c9223e09105&field_list=name,deck,developers,themes,franchises,genres,image,platforms,publishers,description%2Cname&format=json") ) );
     QNetworkReply *reply = mgr.get(req);
     eventLoop.exec();
     QByteArray strReply =reply->readAll();
@@ -179,8 +191,12 @@ void imageDownloader(QString url, QString name){
            QString newName = prettyString(name);
 
            QString myPath = QCoreApplication::applicationDirPath();
-           QString folderPath = myPath +"/"+ newName;
+           QString folderPath = myPath + "/" + "Images" +"/"+ newName;
            QString path =folderPath + "/" + newName + ".jpg";
+
+           if(url.contains("png",Qt::CaseInsensitive)){
+               path = folderPath + "/" + newName + ".png";
+           }
 
            QDir dir(folderPath);
 
@@ -200,13 +216,22 @@ void imageDownloader(QString url, QString name){
 
 }
 
-void imageViewer(QString name){
-//    QString myPath = QCoreApplication::applicationDirPath();
-//    QString path = myPath + "/example.jpg";
-//    QPixmap pixmap(path);
-//    QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
-//    qDebug()<<newp.size();
-//    ui->label->setPixmap(newp);
+QPixmap imageViewer(QString name){
+    QString newName = prettyString(name);
+    qDebug()<<newName;
+    QString myPath = QCoreApplication::applicationDirPath();
+    QString folderPath = myPath + "/" + "Images" +"/"+ newName;
+    QString path =folderPath + "/" + newName + ".jpg";
+
+    if(!QDir(path).exists()){
+       path = folderPath + "/" + newName + ".png";
+    }
+
+    qDebug()<<path;
+    QPixmap pixmap(path);
+    QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
+    return newp;
+   // ui->label->setPixmap(newp);
 }
 
 
@@ -221,3 +246,14 @@ QString prettyString(QString string){
     return string;
 
 }
+
+//QImage imageConverter(){
+//    QEventLoop eventLoop;
+//    QNetworkAccessManager mgr;
+//    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+//    QNetworkRequest req( QUrl( QString("https://process.filestackapi.com/AqS13LTPNRUy2nk4fTbAaz/output=format:jpg/https://www.giantbomb.com/api/image/scale_small/2348791-box_persona4g.png") ) );
+//    QNetworkReply *reply = mgr.get(req);
+//    eventLoop.exec();
+//    QImage file =reply->readAll();
+//    return file;
+//}

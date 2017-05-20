@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 #include <QString>
 #include <QObject>
+#include "dialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -81,4 +82,11 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
     QPixmap pixmap(path);
     QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
     ui->label->setPixmap(newp);
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    Dialog dl;
+    dl.setModal(true);
+    dl.exec();
 }

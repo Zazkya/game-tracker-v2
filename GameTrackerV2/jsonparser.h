@@ -15,11 +15,13 @@
 #include <QVariantMap>
 #include <QJsonArray>
 #include <QString>
+#include <QFile>
 
 class jsonparser
 {
 public:
-    jsonparser(QString gameId);
+    jsonparser();
+    void initParser(QString gameId);
     QString getID();
     QString getName();
     QString getPlatform();
@@ -32,6 +34,7 @@ public:
     QMap<QString, QString>getMap();
     QList<QString>getGenre();
     QList<QString>getPlatformList();
+    void setPlatform(QString platform);
 
 private:
     QMap<QString, QString> map;
@@ -45,7 +48,8 @@ QString parseOverview(QString description);
 QString parsePublisher(QJsonObject jsonObject);
 QString parseImage(QJsonObject jsonObject);
 QString parseDeveloper(QJsonObject jsonObject);
-
+QPixmap imageViewer(QString name);
+QFile imageConverter();
 
 QMap<QString, QString> createMap(QJsonObject jsonObject);
 
