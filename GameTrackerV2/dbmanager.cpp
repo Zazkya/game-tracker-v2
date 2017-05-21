@@ -16,6 +16,7 @@
  * path of db
  */
 dbmanager::dbmanager(){
+
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     QString myPath = QCoreApplication::applicationDirPath();
     QString path = myPath + "/example.db";
@@ -444,4 +445,24 @@ QString dbmanager::nowDate(){
     date_string = date.toString("dd/MM/yyyy");
     return date_string;
 
+}
+
+QMap<QString, QString> dbmanager::editQuery(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT name, platform, status, notes FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    QMap<QString, QString> dbMap;
+
+
+
+    dbMap["name"] = query.value("name").toString();
+    dbMap["platform"] = query.value("platform").toString();
+    dbMap["status"] = query.value("status").toString();
+    dbMap["notes"] = query.value("notes").toString();
+
+
+
+    return dbMap;
 }

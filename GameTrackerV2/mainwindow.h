@@ -24,9 +24,17 @@ private slots:
     void on_addButton_clicked();
     void on_allButton_clicked();
 
+    void on_finishedButton_clicked();
+
+    void on_unfinishedButton_clicked();
+
+    void on_retiredButton_clicked();
+
+    void on_editButton_clicked();
+
 private:
     Ui::MainWindow *ui;
-
+    QString currentName;
 };
 
 #endif // MAINWINDOW_H

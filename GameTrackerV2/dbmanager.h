@@ -34,9 +34,11 @@ public:
     QSqlQuery queryGenre(QString genre, QString status);
     QSqlDatabase myDb();
     QString nowDate();
+    QMap<QString, QString> editQuery(QString name);
 
 private:
     QSqlDatabase m_db;
+
 };
 
 extern dbmanager db;
