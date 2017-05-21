@@ -16,6 +16,9 @@
 #include <QJsonArray>
 #include <QString>
 #include <QFile>
+#include "dbmanager.h"
+
+extern dbmanager db;
 
 class jsonparser
 {
@@ -50,9 +53,8 @@ QString parseImage(QJsonObject jsonObject);
 QString parseDeveloper(QJsonObject jsonObject);
 QPixmap imageViewer(QString name);
 QFile imageConverter();
-
 QMap<QString, QString> createMap(QJsonObject jsonObject);
-
 void imageDownloader(QString url, QString name);
 QString prettyString(QString string);
+
 #endif // JSONPARSER_H

@@ -18,19 +18,23 @@
 
 jsonparser::jsonparser(){
 
-
-
 }
 
-void jsonparser::initParser(QString gameId)
-{
+/**
+ * @brief jsonparser::initParser
+ * @param gameId
+ * takes in gameID
+ * request to getJson to get json array
+ * creates map of data from json request
+ * creates lists for genres and platforms
+ */
+void jsonparser::initParser(QString gameId){
     QByteArray jsonArray = getJson(gameId);
     QJsonDocument doc(QJsonDocument::fromJson(jsonArray));
     QJsonObject json = doc.object();
     QJsonValue value = json.value("results");
     QJsonObject resultsObject = value.toObject();
     map = createMap(resultsObject);
-
 
     QJsonValue genreValue = resultsObject.value("genres");
     QJsonArray tempArray = genreValue.toArray();
@@ -39,8 +43,6 @@ void jsonparser::initParser(QString gameId)
        QJsonObject tempGenreObject = tempGenreValue.toObject();
        genreList.append(tempGenreObject["name"].toString());
     }
-
-
 
     QJsonValue platformValue = resultsObject.value("platforms");
     QJsonArray tempPlatformArray = platformValue.toArray();
@@ -52,73 +54,120 @@ void jsonparser::initParser(QString gameId)
 }
 
 
-
-QString jsonparser::getID()
-{
+/**
+ * @brief jsonparser::getID
+ * @return
+ * uneeded
+ */
+QString jsonparser::getID(){
 
 }
 
-QString jsonparser::getName()
-{
+/**
+ * @brief jsonparser::getName
+ * @return name
+ */
+QString jsonparser::getName(){
     return map["name"];
 }
 
-QString jsonparser::getPlatform()
-{
+/**
+ * @brief jsonparser::getPlatform
+ * @return
+ * uneeded
+ */
+QString jsonparser::getPlatform(){
 
 }
 
-QString jsonparser::getDeveloper()
-{
+/**
+ * @brief jsonparser::getDeveloper
+ * @return developer
+ */
+QString jsonparser::getDeveloper(){
     return map["developer"];
 }
 
-QString jsonparser::getPublisher()
-{
+/**
+ * @brief jsonparser::getPublisher
+ * @return publisher
+ */
+QString jsonparser::getPublisher(){
     return map["publisher"];
 }
 
-QString jsonparser::getSeries()
-{
+/**
+ * @brief jsonparser::getSeries
+ * @return franchises
+ */
+QString jsonparser::getSeries(){
     return map["franchise"];
 }
 
-QString jsonparser::getDeck()
-{
+/**
+ * @brief jsonparser::getDeck
+ * @return deck
+ */
+QString jsonparser::getDeck(){
     return map["deck"];
 }
 
-QString jsonparser::getSynopsis()
-{
+/**
+ * @brief jsonparser::getSynopsis
+ * @return description
+ */
+QString jsonparser::getSynopsis(){
     return map["description"];
 }
 
-QString jsonparser::getImage()
-{
+/**
+ * @brief jsonparser::getImage
+ * @return image url
+ */
+QString jsonparser::getImage(){
     return map["image"];
 }
 
-QMap<QString, QString> jsonparser::getMap()
-{
+/**
+ * @brief jsonparser::getMap
+ * @return map of all data
+ */
+QMap<QString, QString> jsonparser::getMap(){
     return map;
 }
 
-QList<QString> jsonparser::getGenre()
-{
+/**
+ * @brief jsonparser::getGenre
+ * @return genreList
+ */
+QList<QString> jsonparser::getGenre(){
     return genreList;
 }
 
-QList<QString> jsonparser::getPlatformList()
-{
+/**
+ * @brief jsonparser::getPlatformList
+ * @return platformList
+ */
+QList<QString> jsonparser::getPlatformList(){
     return platformList;
 }
 
-void jsonparser::setPlatform(QString platform)
-{
+/**
+ * @brief jsonparser::setPlatform
+ * @param platform
+ * sets a platform to map. used for combox setting
+ */
+void jsonparser::setPlatform(QString platform){
     map["platform"] = platform;
     qDebug()<<map["platform"];
 }
 
+/**
+ * @brief getJson
+ * @param gameID
+ * @return array of json data
+ * network request to API
+ */
 QByteArray getJson(QString gameID){
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
@@ -130,21 +179,28 @@ QByteArray getJson(QString gameID){
     return strReply;
 }
 
-
-
+/**
+ * @brief parseOverview
+ * @param description
+ * @return overview from large article of description
+ * strips of all html code identifiers
+ */
 QString parseOverview(QString description){
     QString overview = description.mid(0, description.indexOf("<h2>Gameplay"));
     overview.remove(QRegExp("<[^>]*>"));
     return overview;
 }
 
+/**
+ * @brief createMap
+ * @param jsonObject
+ * @return map of data from json data
+ */
 QMap<QString, QString> createMap(QJsonObject jsonObject){
     QMap<QString, QString> map;
     map["name"] = jsonObject["name"].toString();
     map["deck"] = jsonObject["deck"].toString();
     map["description"] = parseOverview(jsonObject["description"].toString());
-
-
 
     QJsonValue imageValue = jsonObject.value("image");
     QJsonObject imageObject = imageValue.toObject();
@@ -157,22 +213,31 @@ QMap<QString, QString> createMap(QJsonObject jsonObject){
     map["developer"] = developer0Object["name"].toString();
 
     QJsonValue franchiseValue = jsonObject.value("franchises");
-    QJsonArray franchiseArray = franchiseValue.toArray();
-    QJsonValue franchises0Value = franchiseArray[0];
-    QJsonObject franchises0Object = franchises0Value.toObject();
-    map["franchise"] = franchises0Object["name"].toString();
+    if(!franchiseValue.isUndefined()){
+        QJsonArray franchiseArray = franchiseValue.toArray();
+        if(!franchiseArray.isEmpty()){
+            QJsonValue franchises0Value = franchiseArray[0];
+            QJsonObject franchises0Object = franchises0Value.toObject();
+            map["franchise"] = franchises0Object["name"].toString();
+        }
+    }
 
     QJsonValue publisherValue = jsonObject.value("publishers");
     QJsonArray publisherArray = publisherValue.toArray();
     QJsonValue publisher0Value = publisherArray[0];
     QJsonObject publisher0Object = publisher0Value.toObject();
     map["publisher"] = publisher0Object["name"].toString();
-    //TODO: Add other fields.
 
     return map;
 
 }
 
+/**
+ * @brief imageDownloader
+ * @param url of image
+ * @param name of game
+ * donwloads image form url and creates directory and writes it
+ */
 void imageDownloader(QString url, QString name){
     QEventLoop eventLoop;
     QNetworkAccessManager mgr;
@@ -187,9 +252,7 @@ void imageDownloader(QString url, QString name){
     else
        {
            QByteArray responseData = reply->readAll();
-
            QString newName = prettyString(name);
-
            QString myPath = QCoreApplication::applicationDirPath();
            QString folderPath = myPath + "/" + "Images" +"/"+ newName;
            QString path =folderPath + "/" + newName + ".jpg";
@@ -201,8 +264,7 @@ void imageDownloader(QString url, QString name){
            QDir dir(folderPath);
 
            if(!QDir(folderPath).exists()){
-             qDebug()<< dir.mkpath(folderPath);
-               qDebug()<<folderPath;
+            dir.mkpath(folderPath);
            }
 
 
@@ -211,49 +273,41 @@ void imageDownloader(QString url, QString name){
            file.open(QIODevice::WriteOnly);
            file.write((responseData));
            file.close();
-           qDebug()<<"DONE!!!!!!!!!!!";
        }
-
 }
 
+/**
+ * @brief imageViewer
+ * @param name
+ * @return pixmap of picture from file stored
+ */
 QPixmap imageViewer(QString name){
     QString newName = prettyString(name);
-    qDebug()<<newName;
     QString myPath = QCoreApplication::applicationDirPath();
     QString folderPath = myPath + "/" + "Images" +"/"+ newName;
     QString path =folderPath + "/" + newName + ".jpg";
 
-    if(!QDir(path).exists()){
+    if(!QFile(path).exists()){
        path = folderPath + "/" + newName + ".png";
     }
 
-    qDebug()<<path;
     QPixmap pixmap(path);
     QPixmap newp = pixmap.scaled(250,250,Qt::KeepAspectRatio);
     return newp;
-   // ui->label->setPixmap(newp);
 }
 
-
-
-
-
+/**
+ * @brief prettyString
+ * @param string
+ * @return string without punctuation and spaces
+ * used for filenames
+ */
 QString prettyString(QString string){
-
-
     string.remove(QRegExp(QString::fromUtf8("[-`~!@#$%^&*()_—+=|:;<>«»,.?/{}\'\"\\\[\\\]\\\\]")));
     string.remove(" ");
+    string.toLower();
     return string;
 
 }
 
-//QImage imageConverter(){
-//    QEventLoop eventLoop;
-//    QNetworkAccessManager mgr;
-//    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
-//    QNetworkRequest req( QUrl( QString("https://process.filestackapi.com/AqS13LTPNRUy2nk4fTbAaz/output=format:jpg/https://www.giantbomb.com/api/image/scale_small/2348791-box_persona4g.png") ) );
-//    QNetworkReply *reply = mgr.get(req);
-//    eventLoop.exec();
-//    QImage file =reply->readAll();
-//    return file;
-//}
+

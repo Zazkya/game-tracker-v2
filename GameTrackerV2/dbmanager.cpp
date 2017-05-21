@@ -45,6 +45,14 @@ bool dbmanager::isOpen(){
 }
 
 /**
+ * @brief dbmanager::dbOpen
+ * @return true if db is open
+ */
+bool dbmanager::dbOpen(){
+   return m_db.open();
+}
+
+/**
  * @brief DbManager::createTable
  * create table
  * @return
@@ -63,6 +71,10 @@ bool dbmanager::createTable(){
     return success;
 }
 
+/**
+ * @brief dbmanager::createGenreTable
+ * @return creates genre table
+ */
 bool dbmanager::createGenreTable(){
     bool success = false;
 
@@ -76,6 +88,10 @@ bool dbmanager::createGenreTable(){
     return success;
 }
 
+/**
+ * @brief dbmanager::createLinkerTable
+ * @return creates Linker Table
+ */
 bool dbmanager::createLinkerTable(){
     bool success = false;
 
@@ -88,6 +104,7 @@ bool dbmanager::createLinkerTable(){
 
     return success;
 }
+
 /**
  * @brief DbManager::addEntry
  * add entry to db
@@ -96,34 +113,10 @@ bool dbmanager::createLinkerTable(){
  */
 bool dbmanager::addEntry(QString name, QString platform, QString developer, QString publisher, QString series, QString deck, QString synopsis, QString image, QString status ){
     bool success = false;
-    //TODO:Add method to add to db. Do after api config
+
     QSqlQuery query;
     query.prepare("INSERT INTO gameTable(id, name, platform,developer,publisher,series,deck,synopsis,image,dateModified,dateAdded,status) VALUES (:id, :name,:platform,:developer,:publisher,:series,:deck,:synopsis,:image,:dateModified,:dateAdded, :status)");
-//    qDebug()<<name;
-//    qDebug()<<platform;
-//    qDebug()<<developer;
-//    qDebug()<<publisher;
-//    qDebug()<<series;
-//    qDebug()<<deck;
-//    qDebug()<<synopsis;
-//    qDebug()<<image;
-//    qDebug()<<this->nowDate();
-//    qDebug()<<status;
 
-//   query.bindValue(":id", 1);
-//    query.bindValue(":name", name);
-//    query.bindValue(":platform", platform);
-//    query.bindValue(":developer", developer);
-//    query.bindValue(":publisher", publisher);
-//    query.bindValue(":series", series);
-//    query.bindValue(":deck", deck);
-//    query.bindValue(":synopsis", synopsis);
-//    query.bindValue(":image", image);
-//    query.bindValue(":dateModified", this->nowDate());
-//    query.bindValue(":dateAdded", this->nowDate());
-//    query.bindValue(":status", status);
-
-    //query.prepare("INSERT INTO gameTable(name, platform, status, dateAdded, dateModified, synopsis, deck, developer, publisher, series, image) VALUES(:name, :platform, :status, :dateAdded, :dateModified, :synopsis, :deck, :developer, :publisher, :series, :image)");
     query.bindValue(":name", name);
     query.bindValue(":platform", platform);
     query.bindValue(":status", status);
@@ -136,7 +129,6 @@ bool dbmanager::addEntry(QString name, QString platform, QString developer, QStr
     query.bindValue(":series", series);
     query.bindValue(":image", image);
 
-
     if(!query.exec()){
         success = false;
     }else success = true;
@@ -144,6 +136,11 @@ bool dbmanager::addEntry(QString name, QString platform, QString developer, QStr
     return success;
 }
 
+/**
+ * @brief dbmanager::addGenre
+ * @param list of genres
+ * @return sets genres into genre table if not duplicate and adds in links in linker table
+ */
 bool dbmanager::addGenre(QList<QString> list){
     bool success = false;
 
@@ -155,11 +152,14 @@ bool dbmanager::addGenre(QList<QString> list){
             success = false;
         }else success = true;
     }
-
-
-
 }
 
+/**
+ * @brief dbmanager::autoAddEntry
+ * @param map of data fields
+ * @param genreList
+ * @return adds data from map and genreList to db
+ */
 bool dbmanager::autoAddEntry(QMap<QString, QString> map, QList<QString> genreList){
     bool success = false;
     success = addEntry(map["name"], map["platform"], map["developer"], map["publisher"], map["franchise"], map["deck"],map["description"], map["image"], "Unfinished" );
@@ -195,7 +195,7 @@ bool dbmanager::entryExists(QString &name){
  * returns query
  */
 QSqlQuery dbmanager::queryAll(){
-    QSqlQuery query;
+    QSqlQuery query(QSqlDatabase::database("QSQLITE"));
     query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable");
     query.exec();
     return query;

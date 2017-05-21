@@ -27,12 +27,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     dbmanager.cpp \
     jsonparser.cpp \
-    dialog.cpp
+    dialog.cpp \
+    global.cpp
 
 HEADERS  += mainwindow.h \
     dbmanager.h \
     jsonparser.h \
-    dialog.h
+    dialog.h \
+    global.h
 
 FORMS    += mainwindow.ui \
     dialog.ui

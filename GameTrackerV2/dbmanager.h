@@ -6,13 +6,13 @@
 #include <QString>
 #include <QMap>
 
-
 class dbmanager
 {
 public:
     dbmanager();
     ~dbmanager();
     bool isOpen();
+    bool dbOpen();
     bool createTable();
     bool createGenreTable();
     bool createLinkerTable();
@@ -38,5 +38,8 @@ public:
 private:
     QSqlDatabase m_db;
 };
+
+extern dbmanager db;
+
 
 #endif // DBMANAGER_H
