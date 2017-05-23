@@ -33,6 +33,7 @@ private slots:
     void on_platformFilter_currentIndexChanged(const QString &arg1);
     void tableSetup();
     QSqlQueryModel* tableQuery(QString status);
+    void panelSetup();
 
 
 private:

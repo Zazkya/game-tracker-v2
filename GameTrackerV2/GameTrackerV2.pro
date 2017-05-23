@@ -41,3 +41,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     dialog.ui \
     editdialog.ui
+
+RESOURCES += \
+    icons.qrc

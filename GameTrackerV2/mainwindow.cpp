@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    setWindowIcon(QIcon(":/new/icons/Images/Icons/gamepad.png"));
     dbmanager db;
     db.createTable();
     db.createGenreTable();
@@ -249,3 +249,31 @@ QSqlQueryModel* MainWindow::tableQuery(QString status){
     return model;
 
 }
+
+void MainWindow::panelSetup(){
+    dbmanager db;
+
+    ui->titleLabel->setText(currentName);
+    ui->platformLabel->setText();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

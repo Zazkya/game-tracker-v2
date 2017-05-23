@@ -63,7 +63,7 @@ bool dbmanager::createTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB , rating INTEGER, synopsis CLOB , developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT);");
+    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB , rating INTEGER, synopsis CLOB , developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT, gameid INTEGER AUTOINCREMENT);");
 
     if(!query.exec()){
         success = false;
@@ -97,7 +97,7 @@ bool dbmanager::createLinkerTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS linkerTable(linkerid INTEGER PRIMARY KEY, data INTEGER);");
+    query.prepare("CREATE TABLE IF NOT EXISTS linkerTable(linkerid INTEGER PRIMARY KEY, gameid INTEGER ,genreid INTEGER);");
 
     if(!query.exec()){
         success = false;
@@ -303,13 +303,14 @@ bool dbmanager::updateNote(QString note, QString name){
     bool success = false;
     QString modified = this->nowDate();
     QSqlQuery checkQuery;
-    checkQuery.prepare("UPDATE gameTable SET note = (:note), dateModified = (:modified) WHERE name = (:name)");
+    checkQuery.prepare("UPDATE gameTable SET notes = (:note), dateModified = (:modified) WHERE name = (:name)");
     checkQuery.bindValue(":name", name);
     checkQuery.bindValue(":modified", modified);
     checkQuery.bindValue(":note", note);
-
+    qDebug()<<note;
     if(checkQuery.exec()){
         success = true;
+        qDebug()<<"TRUE";
     }
     return success;
 }
