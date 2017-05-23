@@ -209,11 +209,23 @@ QSqlQuery dbmanager::queryAll(){
  * returns query
  */
 QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
+
     QSqlQuery query;
-    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
-    query.bindValue(":status", status);
-    query.bindValue(":platform", platform);
-    query.exec();
+    if(status == "All" && platform != "All Platforms"){
+        query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable WHERE platform = (:platform)");
+        query.bindValue(":platform", platform);
+        query.exec();
+    }else if (status == "All" && platform == "All Platforms") {
+        query = this->queryAll();
+    }else if (status != "All" && platform == "All Platforms") {
+        query = this->queryStatus(status);
+    }else{
+        query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
+        query.bindValue(":status", status);
+        query.bindValue(":platform", platform);
+        query.exec();
+    }
+
     return query;
 }
 
@@ -228,7 +240,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
  */
 QSqlQuery dbmanager::queryStatus(QString status){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) ");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable WHERE status = (:status) ");
     query.bindValue(":status", status);
     query.exec();
     return query;
@@ -465,4 +477,17 @@ QMap<QString, QString> dbmanager::editQuery(QString name){
 
 
     return dbMap;
+}
+
+QList<QString> dbmanager::getUniquePlatforms(){
+    QSqlQuery query;
+    query.prepare("SELECT DISTINCT platform from gameTable");
+    query.exec();
+
+    platformList << "All Platforms";
+    while (query.next()) {
+        platformList.append(query.value(0).toString());
+    }
+
+    return platformList;
 }

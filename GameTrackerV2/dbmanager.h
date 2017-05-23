@@ -35,10 +35,11 @@ public:
     QSqlDatabase myDb();
     QString nowDate();
     QMap<QString, QString> editQuery(QString name);
+    QList<QString> getUniquePlatforms();
 
 private:
     QSqlDatabase m_db;
-
+    QList<QString> platformList;
 };
 
 extern dbmanager db;

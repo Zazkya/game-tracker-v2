@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::Dialog *ui;
     jsonparser json;
+
 };
 
 #endif // DIALOG_H

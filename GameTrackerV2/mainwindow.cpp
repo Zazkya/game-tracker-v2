@@ -27,7 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     db.createTable();
     db.createGenreTable();
     db.createLinkerTable();
+    platformList = db.getUniquePlatforms();
+    ui->platformFilter->addItems(platformList);
+    currentQuery = 0;
     on_allButton_clicked();
+
 //    QItemSelectionModel *select = ui->tableView->selectionModel();
 //    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 }
@@ -89,6 +93,7 @@ void MainWindow::on_addButton_clicked()
     Dialog dl;
     dl.setModal(true);
     dl.exec();
+    this->updateQuery();
 }
 
 /**
@@ -97,67 +102,75 @@ void MainWindow::on_addButton_clicked()
  */
 void MainWindow::on_allButton_clicked()
 {
-    dbmanager db;
-    QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(db.queryAll());
-    ui->tableView->setModel(model);
-    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);  
-    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
-    sort_filter->setDynamicSortFilter(true);
-    sort_filter->setSourceModel(model);
-    ui->tableView->setModel(sort_filter);
-    ui->tableView->setSortingEnabled(true);
-    QItemSelectionModel *select = ui->tableView->selectionModel();
-    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
+    currentQuery = 0;
+     this->tableSetup();
+//    dbmanager db;
+//    QSqlQueryModel *model = new QSqlQueryModel();
+//    model->setQuery(db.queryAll());
+//    ui->tableView->setModel(model);
+//    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
+//    sort_filter->setDynamicSortFilter(true);
+//    sort_filter->setSourceModel(model);
+//    ui->tableView->setModel(sort_filter);
+//    ui->tableView->setSortingEnabled(true);
+//    QItemSelectionModel *select = ui->tableView->selectionModel();
+//    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 
 }
 
 void MainWindow::on_finishedButton_clicked()
 {
-    dbmanager db;
-    QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(db.queryStatus("Finished"));
-    ui->tableView->setModel(model);
-    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
-    sort_filter->setDynamicSortFilter(true);
-    sort_filter->setSourceModel(model);
-    ui->tableView->setModel(sort_filter);
-    ui->tableView->setSortingEnabled(true);
-    QItemSelectionModel *select = ui->tableView->selectionModel();
-    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
+    currentQuery = 1;
+    this->tableSetup();
+//    dbmanager db;
+//    QSqlQueryModel *model = new QSqlQueryModel();
+//    model->setQuery(db.queryStatus("Finished"));
+//    ui->tableView->setModel(model);
+//    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
+//    sort_filter->setDynamicSortFilter(true);
+//    sort_filter->setSourceModel(model);
+//    ui->tableView->setModel(sort_filter);
+//    ui->tableView->setSortingEnabled(true);
+//    QItemSelectionModel *select = ui->tableView->selectionModel();
+//    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 }
 
 void MainWindow::on_unfinishedButton_clicked()
 {
-    dbmanager db;
-    QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(db.queryStatus("Unfinished"));
-    ui->tableView->setModel(model);
-    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
-    sort_filter->setDynamicSortFilter(true);
-    sort_filter->setSourceModel(model);
-    ui->tableView->setModel(sort_filter);
-    ui->tableView->setSortingEnabled(true);
-    QItemSelectionModel *select = ui->tableView->selectionModel();
-    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
+    currentQuery = 2;
+     this->tableSetup();
+//    dbmanager db;
+//    QSqlQueryModel *model = new QSqlQueryModel();
+//    model->setQuery(db.queryStatus("Unfinished"));
+//    ui->tableView->setModel(model);
+//    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
+//    sort_filter->setDynamicSortFilter(true);
+//    sort_filter->setSourceModel(model);
+//    ui->tableView->setModel(sort_filter);
+//    ui->tableView->setSortingEnabled(true);
+//    QItemSelectionModel *select = ui->tableView->selectionModel();
+//    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 }
 
 void MainWindow::on_retiredButton_clicked()
 {
-    dbmanager db;
-    QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(db.queryStatus("Retired"));
-    ui->tableView->setModel(model);
-    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
-    sort_filter->setDynamicSortFilter(true);
-    sort_filter->setSourceModel(model);
-    ui->tableView->setModel(sort_filter);
-    ui->tableView->setSortingEnabled(true);
-    QItemSelectionModel *select = ui->tableView->selectionModel();
-    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
+    currentQuery = 3;
+     this->tableSetup();
+//    dbmanager db;
+//    QSqlQueryModel *model = new QSqlQueryModel();
+//    model->setQuery(db.queryStatus("Retired"));
+//    ui->tableView->setModel(model);
+//    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
+//    sort_filter->setDynamicSortFilter(true);
+//    sort_filter->setSourceModel(model);
+//    ui->tableView->setModel(sort_filter);
+//    ui->tableView->setSortingEnabled(true);
+//    QItemSelectionModel *select = ui->tableView->selectionModel();
+//    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 
 }
 
@@ -167,8 +180,72 @@ void MainWindow::on_editButton_clicked(){
     dl.setName(currentName);
     dl.dbQuery();
     dl.setQuery();
-
-
-
     dl.exec();
+    this->updateQuery();
+
+}
+
+void MainWindow::updateQuery(){
+
+    switch (currentQuery) {
+        case 0:
+            on_allButton_clicked();
+            break;
+        case 1:
+            on_finishedButton_clicked();
+            break;
+        case 2:
+            on_unfinishedButton_clicked();
+            break;
+        case 3:
+            on_retiredButton_clicked();
+            break;
+    }
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &index){
+    on_editButton_clicked();
+}
+
+void MainWindow::on_platformFilter_currentIndexChanged(const QString &arg1){
+    currentFilter = ui->platformFilter->currentText();
+    this->updateQuery();
+}
+
+void MainWindow::tableSetup(){
+    QSqlQueryModel *model = new QSqlQueryModel();
+
+    switch (currentQuery) {
+        case 0:
+            model = this->tableQuery("All");
+            break;
+        case 1:
+            model = this->tableQuery("Finished");
+            break;
+        case 2:
+            model = this->tableQuery("Unfinished");
+            break;
+        case 3:
+            model = this->tableQuery("Retired");
+            break;
+      }
+
+    ui->tableView->setModel(model);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
+    sort_filter->setDynamicSortFilter(true);
+    sort_filter->setSourceModel(model);
+    ui->tableView->setModel(sort_filter);
+    ui->tableView->setSortingEnabled(true);
+    QItemSelectionModel *select = ui->tableView->selectionModel();
+    QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
+}
+
+QSqlQueryModel* MainWindow::tableQuery(QString status){
+    dbmanager db;
+    QSqlQueryModel *model = new QSqlQueryModel();
+
+    model->setQuery(db.queryPlatform(currentFilter, status));
+    return model;
+
 }

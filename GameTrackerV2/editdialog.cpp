@@ -25,7 +25,9 @@ bool editdialog::dbQuery(){
 
 bool editdialog::setQuery(){
     ui->nameEdit->setText(editDialogMap["name"]);
+    ui->nameEdit->setReadOnly(true);
     ui->platformEdit->setText(editDialogMap["platform"]);
+    ui->platformEdit->setReadOnly(true);
     ui->statusBox->addItem(editDialogMap["status"]);
     ui->commentEdit->setText(editDialogMap["notes"]);
 
@@ -41,4 +43,22 @@ bool editdialog::setQuery(){
     }
 
 
+}
+
+void editdialog::on_statusBox_currentIndexChanged(const QString &arg1){
+    editDialogMap["status"] = ui->statusBox->currentText();
+}
+
+void editdialog::on_buttonBox_accepted(){
+    editDialogdb.updateNote(editDialogMap["notes"], name);
+    editDialogdb.updateStatus(editDialogMap["status"], name);
+
+}
+
+void editdialog::on_commentEdit_textChanged(){
+    editDialogMap["notes"] = ui->commentEdit->toPlainText();
+}
+
+void editdialog::on_buttonBox_rejected(){
+    this->close();
 }

@@ -61,11 +61,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="sortButton">
-        <property name="text">
-         <string>Sort</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="platformFilter"/>
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit"/>

@@ -20,6 +20,15 @@ public:
     bool dbQuery();
     bool setQuery();
 
+private slots:
+    void on_statusBox_currentIndexChanged(const QString &arg1);
+
+    void on_buttonBox_accepted();
+
+    void on_commentEdit_textChanged();
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::editdialog *ui;
     dbmanager editDialogdb;
