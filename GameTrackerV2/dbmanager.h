@@ -38,6 +38,7 @@ public:
     QList<QString> getUniquePlatforms();
     bool updateLinker(QList<QString> genreList, QString name);
     int getGameID(QString name);
+    QString getNote(QString name);
 
 private:
     QSqlDatabase m_db;

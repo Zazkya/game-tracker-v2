@@ -254,7 +254,7 @@ void MainWindow::panelSetup(){
     dbmanager db;
 
     ui->titleLabel->setText(currentName);
-    ui->platformLabel->setText();
+    ui->platformLabel->setText(db.getNote(currentName));
 
 }
 

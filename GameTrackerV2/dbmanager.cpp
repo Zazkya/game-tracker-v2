@@ -63,7 +63,7 @@ bool dbmanager::createTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB , rating INTEGER, synopsis CLOB , developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT, gameid INTEGER AUTOINCREMENT);");
+    query.prepare("CREATE TABLE IF NOT EXISTS gameTable(id INTEGER PRIMARY KEY, name TEXT NOT NULL, platform TEXT NOT NULL, status TEXT NOT NULL, dateAdded TEXT NOT NULL, dateModified TEXT NOT NULL, notes CLOB , rating INTEGER, synopsis CLOB , developer TEXT, publisher TEXT, series TEXT, deck TEXT, image TEXT, gameid INTEGER, UNIQUE(name));");
 
     if(!query.exec()){
         success = false;
@@ -80,7 +80,7 @@ bool dbmanager::createGenreTable(){
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("CREATE TABLE IF NOT EXISTS genreTable(genreid INTEGER PRIMARY KEY, genre, UNIQUE(genre));");
+    query.prepare("CREATE TABLE IF NOT EXISTS genreTable(genreid INTEGER PRIMARY KEY, genre TEXT, UNIQUE(genre));");
 
     if(!query.exec()){
         success = false;
@@ -116,7 +116,7 @@ bool dbmanager::addEntry(QString name, QString platform, QString developer, QStr
     bool success = false;
 
     QSqlQuery query;
-    query.prepare("INSERT INTO gameTable(id, name, platform,developer,publisher,series,deck,synopsis,image,dateModified,dateAdded,status) VALUES (:id, :name,:platform,:developer,:publisher,:series,:deck,:synopsis,:image,:dateModified,:dateAdded, :status)");
+    query.prepare("INSERT OR IGNORE INTO gameTable(id, name, platform,developer,publisher,series,deck,synopsis,image,dateModified,dateAdded,status) VALUES (:id, :name,:platform,:developer,:publisher,:series,:deck,:synopsis,:image,:dateModified,:dateAdded, :status)");
 
     query.bindValue(":name", name);
     query.bindValue(":platform", platform);
@@ -133,6 +133,19 @@ bool dbmanager::addEntry(QString name, QString platform, QString developer, QStr
     if(!query.exec()){
         success = false;
     }else success = true;
+
+    QSqlQuery query2;
+    query2.prepare("SELECT id from gameTable WHERE name = (:name)");
+    query2.bindValue(":name", name);
+    query2.exec();
+    query2.next();
+
+    QSqlQuery query3;
+    query3.prepare("UPDATE gameTable SET gameid  = (:gameid) WHERE name = (:name)");
+    query3.bindValue(":gameid", query2.value(0).toInt());
+    query3.bindValue(":name", name);
+    query3.exec();
+
 
     return success;
 }
@@ -528,6 +541,15 @@ int dbmanager::getGameID(QString name){
 
     return query.value(0).toInt();
 
+}
+
+QString dbmanager::getNote(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT notes from gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
 }
 
 
