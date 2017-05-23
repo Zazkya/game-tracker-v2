@@ -31,11 +31,13 @@ public:
     QSqlQuery queryAll();
     QSqlQuery queryPlatform(QString platform, QString status);
     QSqlQuery queryStatus(QString status);
-    QSqlQuery queryGenre(QString genre, QString status);
+    QList<QString> getGenre(QString name);
     QSqlDatabase myDb();
     QString nowDate();
     QMap<QString, QString> editQuery(QString name);
     QList<QString> getUniquePlatforms();
+    bool updateLinker(QList<QString> genreList, QString name);
+    int getGameID(QString name);
 
 private:
     QSqlDatabase m_db;

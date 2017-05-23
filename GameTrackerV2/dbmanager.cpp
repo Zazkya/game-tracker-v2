@@ -165,6 +165,10 @@ bool dbmanager::autoAddEntry(QMap<QString, QString> map, QList<QString> genreLis
     bool success = false;
     success = addEntry(map["name"], map["platform"], map["developer"], map["publisher"], map["franchise"], map["deck"],map["description"], map["image"], "Unfinished" );
 
+    this->addGenre(genreList);
+    this->updateLinker(genreList, map["name"]);
+
+
     return success;
 }
 
@@ -246,20 +250,24 @@ QSqlQuery dbmanager::queryStatus(QString status){
     return query;
 }
 
-/**
- * @brief DbManager::queryGenre
- * queries genre of games - used for sorting
- * @return
- * returns query
- */
-QSqlQuery dbmanager::queryGenre(QString genre, QString status){
+QList<QString> dbmanager::getGenre(QString name){
+    QList<QString> list;
+
     QSqlQuery query;
-    query.prepare("SELECT name, platform, genre, status, dateAdded, dateModified FROM gameTable WHERE status = (:status) AND genre = (:genre)");
-    query.bindValue(":status", status);
-    query.bindValue(":genre", genre);
+    query.prepare("SELECT genreTable.genre FROM genreTable INNER JOIN linkerTable ON linkerTable.genreid = genreTable.genreid WHERE linkerTable.gameid = (:gameid)");
+    query.bindValue(":gameid", this->getGameID(name));
     query.exec();
-    return query;
+
+    while (query.next()) {
+        list.append(query.value(0).toString());
+    }
+
+
+
+
+    return list;
 }
+
 
 /**
  * @brief DbManager::myDb
@@ -492,3 +500,55 @@ QList<QString> dbmanager::getUniquePlatforms(){
 
     return platformList;
 }
+
+bool dbmanager::updateLinker(QList<QString> genreList, QString name){
+    QSqlQuery query;
+    QSqlQuery query2;
+
+    for(int i = 0; i < genreList.count(); i++){
+        query.prepare("SELECT genreid FROM genreTable WHERE genre = (:genre)");
+        query.bindValue(":genre", genreList[i]);
+        query.exec();
+        query.next();
+
+        query2.prepare("INSERT INTO linkerTable(gameid, genreid) VALUES(:gameid, :genreid)");
+        query2.bindValue(":gameid", this->getGameID(name));
+        query2.bindValue(":genreid", query.value(0));
+        query2.exec();
+    }
+}
+
+int dbmanager::getGameID(QString name){
+
+    QSqlQuery query;
+    query.prepare("SELECT gameid FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+
+    return query.value(0).toInt();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
