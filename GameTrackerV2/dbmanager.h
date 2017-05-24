@@ -39,6 +39,13 @@ public:
     bool updateLinker(QList<QString> genreList, QString name);
     int getGameID(QString name);
     QString getNote(QString name);
+    QString getSynopsis(QString name);
+    QString getPlatform(QString name);
+    QString getDeveloper(QString name);
+    QString getPublisher(QString name);
+    QString getSeries(QString name);
+    QString getDeck(QString name);
+
 
 private:
     QSqlDatabase m_db;

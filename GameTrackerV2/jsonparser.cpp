@@ -188,6 +188,7 @@ QByteArray getJson(QString gameID){
 QString parseOverview(QString description){
     QString overview = description.mid(0, description.indexOf("<h2>Gameplay"));
     overview.remove(QRegExp("<[^>]*>"));
+    overview.remove(0, 8);
     return overview;
 }
 

@@ -36,11 +36,15 @@ private slots:
     void panelSetup();
 
 
+
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     QString currentName;
     int currentQuery;
     QList<QString> platformList;
     QString currentFilter;
+    QString searchText;
 };
 #endif // MAINWINDOW_H

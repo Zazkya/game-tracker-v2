@@ -214,7 +214,7 @@ bool dbmanager::entryExists(QString &name){
  */
 QSqlQuery dbmanager::queryAll(){
     QSqlQuery query(QSqlDatabase::database("QSQLITE"));
-    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes FROM gameTable");
     query.exec();
     return query;
 }
@@ -229,7 +229,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
 
     QSqlQuery query;
     if(status == "All" && platform != "All Platforms"){
-        query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable WHERE platform = (:platform)");
+        query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes FROM gameTable WHERE platform = (:platform)");
         query.bindValue(":platform", platform);
         query.exec();
     }else if (status == "All" && platform == "All Platforms") {
@@ -237,7 +237,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
     }else if (status != "All" && platform == "All Platforms") {
         query = this->queryStatus(status);
     }else{
-        query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
+        query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
         query.bindValue(":status", status);
         query.bindValue(":platform", platform);
         query.exec();
@@ -257,7 +257,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
  */
 QSqlQuery dbmanager::queryStatus(QString status){
     QSqlQuery query;
-    query.prepare("SELECT name, platform, status, dateAdded, dateModified, deck FROM gameTable WHERE status = (:status) ");
+    query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes FROM gameTable WHERE status = (:status) ");
     query.bindValue(":status", status);
     query.exec();
     return query;
@@ -546,6 +546,65 @@ int dbmanager::getGameID(QString name){
 QString dbmanager::getNote(QString name){
     QSqlQuery query;
     query.prepare("SELECT notes from gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+}
+
+QString dbmanager::getSynopsis(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT synopsis FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+
+}
+
+QString dbmanager::getPlatform(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT platform FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+
+    return query.value(0).toString();
+
+}
+
+QString dbmanager::getDeveloper(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT developer FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+}
+
+QString dbmanager::getPublisher(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT publisher FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+
+}
+
+QString dbmanager::getSeries(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT series FROM gameTable WHERE name = (:name)");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+
+}
+
+QString dbmanager::getDeck(QString name){
+    QSqlQuery query;
+    query.prepare("SELECT deck FROM gameTable WHERE name = (:name)");
     query.bindValue(":name", name);
     query.exec();
     query.next();

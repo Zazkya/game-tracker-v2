@@ -64,6 +64,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index){
     QPixmap pixmap(path);
     QPixmap newp = pixmap.scaled(200,250,Qt::IgnoreAspectRatio);
     ui->label->setPixmap(newp);
+    this->panelSetup();
 }
 
 /**
@@ -235,8 +236,19 @@ void MainWindow::tableSetup(){
     QSortFilterProxyModel *sort_filter = new QSortFilterProxyModel(this);
     sort_filter->setDynamicSortFilter(true);
     sort_filter->setSourceModel(model);
+    sort_filter->setFilterWildcard(QRegExp(searchText,Qt::CaseInsensitive,QRegExp::Wildcard).pattern());
+
+    sort_filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+
     ui->tableView->setModel(sort_filter);
     ui->tableView->setSortingEnabled(true);
+
+    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+
+
+
+
+
     QItemSelectionModel *select = ui->tableView->selectionModel();
     QObject::connect(select,SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableView_clicked(QModelIndex)));
 }
@@ -246,6 +258,12 @@ QSqlQueryModel* MainWindow::tableQuery(QString status){
     QSqlQueryModel *model = new QSqlQueryModel();
 
     model->setQuery(db.queryPlatform(currentFilter, status));
+    model->setHeaderData(0, Qt::Horizontal, "Title");
+    model->setHeaderData(1, Qt::Horizontal, "Platform");
+    model->setHeaderData(2, Qt::Horizontal, "Status");
+    model->setHeaderData(3, Qt::Horizontal, "Date Added");
+    model->setHeaderData(4, Qt::Horizontal, "Date Modified");
+    model->setHeaderData(5, Qt::Horizontal, "Comment");
     return model;
 
 }
@@ -253,20 +271,29 @@ QSqlQueryModel* MainWindow::tableQuery(QString status){
 void MainWindow::panelSetup(){
     dbmanager db;
 
+    QList<QString> list = db.getGenre(currentName);
+    QString genre;
     ui->titleLabel->setText(currentName);
-    ui->platformLabel->setText(db.getNote(currentName));
+    ui->descriptionLabel->setText(db.getSynopsis(currentName));
 
+    genre = list[0];
+    for(int i = 1; i < list.count(); i++){
+        genre.append(", " + list[i]);
+    }
+
+    ui->genreLabel->setText(genre);
+    ui->platformLabel->setText(db.getPlatform(currentName));
+    ui->devLabel->setText(db.getDeveloper(currentName));
+    ui->publisherLabel->setText(db.getPublisher(currentName));
+    ui->seriesLabel->setText(db.getSeries(currentName));
+    ui->deckLabel->setText(db.getDeck(currentName));
 }
 
-
-
-
-
-
-
-
-
-
+void MainWindow::on_lineEdit_textChanged(const QString &arg1){
+    searchText = arg1;
+    this->updateQuery();
+    qDebug()<<searchText;
+}
 
 
 
