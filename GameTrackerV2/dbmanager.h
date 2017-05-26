@@ -45,7 +45,7 @@ public:
     QString getPublisher(QString name);
     QString getSeries(QString name);
     QString getDeck(QString name);
-
+    QString getName();
 
 private:
     QSqlDatabase m_db;

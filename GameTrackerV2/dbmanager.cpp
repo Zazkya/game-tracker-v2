@@ -237,7 +237,7 @@ QSqlQuery dbmanager::queryPlatform(QString platform, QString status){
     }else if (status != "All" && platform == "All Platforms") {
         query = this->queryStatus(status);
     }else{
-        query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes, rating FROM gameTable WHERE status = (:status) AND platform = (:platform)");
+        query.prepare("SELECT name, platform, status, dateAdded, dateModified, notes FROM gameTable WHERE status = (:status) AND platform = (:platform)");
         query.bindValue(":status", status);
         query.bindValue(":platform", platform);
         query.exec();
@@ -328,10 +328,10 @@ bool dbmanager::updateNote(QString note, QString name){
     checkQuery.bindValue(":name", name);
     checkQuery.bindValue(":modified", modified);
     checkQuery.bindValue(":note", note);
-    qDebug()<<note;
+
     if(checkQuery.exec()){
         success = true;
-        qDebug()<<"TRUE";
+
     }
     return success;
 }
@@ -606,6 +606,15 @@ QString dbmanager::getDeck(QString name){
     QSqlQuery query;
     query.prepare("SELECT deck FROM gameTable WHERE name = (:name)");
     query.bindValue(":name", name);
+    query.exec();
+    query.next();
+    return query.value(0).toString();
+}
+
+QString dbmanager::getName(){
+    QSqlQuery query;
+    query.prepare("SELECT id FROM gameTable WHERE id = (:id");
+    query.bindValue(":id", 1);
     query.exec();
     query.next();
     return query.value(0).toString();

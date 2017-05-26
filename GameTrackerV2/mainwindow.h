@@ -34,7 +34,7 @@ private slots:
     void tableSetup();
     QSqlQueryModel* tableQuery(QString status);
     void panelSetup();
-
+    void buttonColor();
 
 
     void on_lineEdit_textChanged(const QString &arg1);

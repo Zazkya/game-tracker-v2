@@ -22,14 +22,29 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowIcon(QIcon(":/new/icons/Images/Icons/gamepad.png"));
+    setWindowIcon(QIcon(":/new/icons/Images/Icons/057-joystick.png"));
+
+    QFile f(":qdarkstyle/style.qss");
+    if (!f.exists())
+    {
+      qDebug()<<"Unable to set stylesheet, file not found\n";
+    }
+    else
+    {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+    }
+
     dbmanager db;
     db.createTable();
     db.createGenreTable();
     db.createLinkerTable();
+
     platformList = db.getUniquePlatforms();
     ui->platformFilter->addItems(platformList);
     currentQuery = 0;
+    this->on_viewButton_clicked();
     on_allButton_clicked();
 
 //    QItemSelectionModel *select = ui->tableView->selectionModel();
@@ -105,6 +120,7 @@ void MainWindow::on_allButton_clicked()
 {
     currentQuery = 0;
      this->tableSetup();
+//    this->buttonColor();
 //    dbmanager db;
 //    QSqlQueryModel *model = new QSqlQueryModel();
 //    model->setQuery(db.queryAll());
@@ -124,6 +140,7 @@ void MainWindow::on_finishedButton_clicked()
 {
     currentQuery = 1;
     this->tableSetup();
+//    this->buttonColor();
 //    dbmanager db;
 //    QSqlQueryModel *model = new QSqlQueryModel();
 //    model->setQuery(db.queryStatus("Finished"));
@@ -141,6 +158,7 @@ void MainWindow::on_finishedButton_clicked()
 void MainWindow::on_unfinishedButton_clicked()
 {
     currentQuery = 2;
+//    this->buttonColor();
      this->tableSetup();
 //    dbmanager db;
 //    QSqlQueryModel *model = new QSqlQueryModel();
@@ -159,6 +177,7 @@ void MainWindow::on_unfinishedButton_clicked()
 void MainWindow::on_retiredButton_clicked()
 {
     currentQuery = 3;
+//    this->buttonColor();
      this->tableSetup();
 //    dbmanager db;
 //    QSqlQueryModel *model = new QSqlQueryModel();
@@ -243,8 +262,9 @@ void MainWindow::tableSetup(){
     ui->tableView->setModel(sort_filter);
     ui->tableView->setSortingEnabled(true);
 
+    ui->tableView->horizontalHeader()->setDragEnabled(true);
+    ui->tableView->setColumnWidth(0,195);
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
-
 
 
 
@@ -289,10 +309,42 @@ void MainWindow::panelSetup(){
     ui->deckLabel->setText(db.getDeck(currentName));
 }
 
+void MainWindow::buttonColor(){
+    switch (currentQuery) {
+    case 0:
+        ui->allButton->setStyleSheet("background-color: #3daee9");
+        ui->finishedButton->setStyleSheet("background-color: #31363b");
+        ui->unfinishedButton->setStyleSheet("background-color: #31363b");
+        ui->retiredButton->setStyleSheet("background-color: #31363b");
+        break;
+    case 1:
+        ui->finishedButton->setStyleSheet("background-color: #3daee9");
+        ui->allButton->setStyleSheet("background-color: #31363b");
+        ui->unfinishedButton->setStyleSheet("background-color: #31363b");
+        ui->retiredButton->setStyleSheet("background-color: #31363b");
+        break;
+    case 2:
+        ui->unfinishedButton->setStyleSheet("background-color: #3daee9");
+        ui->finishedButton->setStyleSheet("background-color: #31363b");
+        ui->allButton->setStyleSheet("background-color: #31363b");
+        ui->retiredButton->setStyleSheet("background-color: #31363b");
+        break;
+    case 3:
+        ui->retiredButton->setStyleSheet("background-color: #3daee9");
+        ui->finishedButton->setStyleSheet("background-color: #31363b");
+        ui->unfinishedButton->setStyleSheet("background-color: #31363b");
+        ui->allButton->setStyleSheet("background-color: #31363b");
+        break;
+    }
+
+}
+
+
+
 void MainWindow::on_lineEdit_textChanged(const QString &arg1){
     searchText = arg1;
     this->updateQuery();
-    qDebug()<<searchText;
+
 }
 
 

@@ -186,9 +186,13 @@ QByteArray getJson(QString gameID){
  * strips of all html code identifiers
  */
 QString parseOverview(QString description){
-    QString overview = description.mid(0, description.indexOf("<h2>Gameplay"));
-    overview.remove(QRegExp("<[^>]*>"));
-    overview.remove(0, 8);
+    description.remove(0,17);
+    QString overview = description.mid(0,description.indexOf("<h2>"));
+//    QString overview = description.remove(0,17);
+//    QString overview2 = overview.mid(0,overview.indexOf("<h2>"));
+//    overview2.replace("</p>", "\n");
+//    overview2.remove(QRegExp("<[^>]*>"));
+
     return overview;
 }
 
@@ -270,7 +274,7 @@ void imageDownloader(QString url, QString name){
 
 
            QFile file(path);
-           qDebug()<<path;
+
            file.open(QIODevice::WriteOnly);
            file.write((responseData));
            file.close();

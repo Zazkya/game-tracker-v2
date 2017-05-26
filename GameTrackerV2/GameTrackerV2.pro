@@ -29,18 +29,23 @@ SOURCES += main.cpp\
     jsonparser.cpp \
     dialog.cpp \
     global.cpp \
-    editdialog.cpp
+    editdialog.cpp \
+    manualadd.cpp
 
 HEADERS  += mainwindow.h \
     dbmanager.h \
     jsonparser.h \
     dialog.h \
     global.h \
-    editdialog.h
+    editdialog.h \
+    manualadd.h
 
 FORMS    += mainwindow.ui \
     dialog.ui \
-    editdialog.ui
+    editdialog.ui \
+    manualadd.ui
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    style.qrc
+

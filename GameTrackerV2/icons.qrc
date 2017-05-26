@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/new/icons">
         <file>Images/Icons/gamepad.png</file>
+        <file>Images/Icons/057-joystick.png</file>
     </qresource>
     <qresource prefix="/new/buttons"/>
 </RCC>
