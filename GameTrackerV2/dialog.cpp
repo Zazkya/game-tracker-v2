@@ -4,7 +4,7 @@
 #include "jsonparser.h"
 #include "dbmanager.h"
 #include "global.h"
-
+#include "manualadd.h"
 
 
 /**
@@ -64,5 +64,12 @@ void Dialog::on_comboBox_currentIndexChanged(const QString &arg1){
 void Dialog::on_pushButton_3_clicked(){
     dbmanager db;
     db.autoAddEntry(json.getMap(),json.getGenre());
+    this->close();
+}
+
+void Dialog::on_pushButton_2_clicked(){
+    manualAdd window;
+    window.setModal(true);
+    window.exec();
     this->close();
 }
